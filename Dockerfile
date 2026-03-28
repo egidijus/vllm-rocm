@@ -48,8 +48,6 @@ RUN cd /app && uv venv --python 3.12 && \
     uv pip install pip && \
     echo "source /app/.venv/bin/activate" > /root/.bash_profile
 
-RUN /sbin/modprobe amdgpu
-
 # install ROCm python packages
 RUN uv pip install \
     --index-url https://rocm.nightlies.amd.com/v2/${AMDGPU_FAMILY}/ \
@@ -82,8 +80,6 @@ ENV Torch_DIR="/app/.venv/lib/python3.12/site-packages/torch/share/cmake/Torch"
 
 # copy .bash_profile to .bashrc
 RUN cp /root/.bash_profile /root/.bashrc
-
-
 
 # clone vllm
 RUN --security=insecure git clone https://github.com/vllm-project/vllm.git && \
