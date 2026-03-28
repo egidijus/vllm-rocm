@@ -17,7 +17,7 @@ ARG VLLM_BRANCH
 # DOC Can't self reference $PATH becayse $PATH does not exist before an image is "FROMMED"
 
 ENV ROCM_PATH=/opt/rocm
-ENV PATH="/root/.local/bin:${ROCM_PATH}/bin:${ROCM_PATH}/llvm/bin:/usr/sbin:/sbin:/bin/usr/bin:${PATH}"
+ENV PATH="/root/.local/bin:${ROCM_PATH}/bin:${ROCM_PATH}/llvm/bin:/usr/sbin:/sbin:/bin/usr:/bin:${PATH}"
 
 SHELL ["/bin/bash", "-l", "-c"]
 WORKDIR /app
@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libatomic1 \
     libgomp1 \
     libnuma-dev \
+    kmod \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
