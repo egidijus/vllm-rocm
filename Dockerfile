@@ -90,8 +90,14 @@ RUN --security=insecure git clone https://github.com/vllm-project/vllm.git && \
     uv pip install "numpy<2" && \
     # uv pip install -r requirements/rocm.txt
     uv pip install -r requirements/rocm.txt && \
-    python setup.py develop && \
+    python3 setup.py clean --all  && \
+    python3 setup.py bdist_wheel --dist-dir=dist && \
     uv pip install /opt/rocm/share/amd_smi
+
+# Verify that PyTorch is the ROCm build, not CUDA
+RUN python3 -c "import torch; assert torch.version.hip is not None, \
+    f'Expected ROCm PyTorch but got CUDA (torch.version.cuda={torch.version.cuda}, torch.version.hip={torch.version.hip})'; \
+    print(f'Verified: PyTorch {torch.__version__} with ROCm (HIP {torch.version.hip})')"
 
 # RUN git clone https://github.com/hyoon1/flash-attention.git && \    
 # RUN git clone https://github.com/ROCm/flash-attention.git && \
