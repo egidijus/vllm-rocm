@@ -5,7 +5,7 @@ ARG ROCM_VERSION=7.13.0a20260327
 #ARG ROCM_VERSION=7.12.0a20260311
 #ARG ROCM_VERSION=7.12.0a20260205
 ARG VLLM_BRANCH="releases/v0.18.1"
-ENV PATH="/root/.local/bin:$PATH"
+
 
 FROM ubuntu:24.04 AS base
 ENV PYTHONUNBUFFERED=1
@@ -13,6 +13,9 @@ ARG AMDGPU_FAMILY
 ARG GPU_ARCH
 ARG ROCM_VERSION
 ARG VLLM_BRANCH
+
+# DOC Can't self reference $PATH becayse $PATH does not exist before an image is "FROMMED"
+ENV PATH="/root/.local/bin:$PATH"
 
 SHELL ["/bin/bash", "-l", "-c"]
 WORKDIR /app
