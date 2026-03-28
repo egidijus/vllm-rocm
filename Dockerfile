@@ -29,7 +29,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # setup venv and make the env active for all shell sessions,
 # including run commands
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+# 2026-03-27 https://github.com/vllm-project/vllm/commit/af89140efc06c462ae531999b9f2db6ba0c7a528
+# RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+RUN curl -LsSf --retry 3 --retry-delay 5 https://astral.sh/uv/install.sh -o /tmp/uv-install.sh \
+    && env UV_INSTALL_DIR="/root/.local/bin" sh /tmp/uv-install.sh \
+    && rm -f /tmp/uv-install.sh \
+    && uv --version &&
     export PATH=/root/.local/bin:$PATH
 ENV PATH="/root/.local/bin:${PATH}"
 RUN cd /app && uv venv --python 3.12 && \
