@@ -15,7 +15,8 @@ ARG ROCM_VERSION
 ARG VLLM_BRANCH
 
 # DOC Can't self reference $PATH becayse $PATH does not exist before an image is "FROMMED"
-ENV PATH="/root/.local/bin:$PATH"
+
+ENV PATH="/root/.local/bin:${ROCM_PATH}/bin:${ROCM_PATH}/llvm/bin:/usr/sbin:/sbin:/bin/usr/bin:${PATH}"
 
 SHELL ["/bin/bash", "-l", "-c"]
 WORKDIR /app
@@ -45,7 +46,7 @@ RUN cd /app && uv venv --python 3.12 && \
     uv pip install pip && \
     echo "source /app/.venv/bin/activate" > /root/.bash_profile
 
-RUN modprobe amdgpu
+RUN /sbin/modprobe amdgpu
 
 # install ROCm python packages
 RUN uv pip install \
@@ -69,7 +70,7 @@ ENV DEVICE_LIB_PATH=$ROCM_PATH/llvm/amdgcn/bitcode
 ENV HIP_DEVICE_LIB_PATH=$ROCM_PATH/llvm/amdgcn/bitcode
 ENV FLASH_ATTENTION_TRITON_AMD_ENABLE="TRUE"
 ENV PYTORCH_ROCM_ARCH=${GPU_ARCH}
-ENV PATH=${ROCM_PATH}/bin:${ROCM_PATH}/llvm/bin:${PATH}
+
 ENV CC=$ROCM_PATH/llvm/bin/clang
 ENV CXX=$ROCM_PATH/llvm/bin/clang++
 ENV HIPCC=$ROCM_PATH/bin/hipcc
