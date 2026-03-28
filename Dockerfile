@@ -16,6 +16,7 @@ ARG VLLM_BRANCH
 
 # DOC Can't self reference $PATH becayse $PATH does not exist before an image is "FROMMED"
 
+ENV ROCM_PATH=/opt/rocm
 ENV PATH="/root/.local/bin:${ROCM_PATH}/bin:${ROCM_PATH}/llvm/bin:/usr/sbin:/sbin:/bin/usr/bin:${PATH}"
 
 SHELL ["/bin/bash", "-l", "-c"]
@@ -63,7 +64,7 @@ RUN mkdir -p /opt/rocm-$ROCM_VERSION && \
     rm therock-dist-linux-$AMDGPU_FAMILY-$ROCM_VERSION.tar.gz && \
     ln -s /opt/rocm-$ROCM_VERSION /opt/rocm
 
-ENV ROCM_PATH=/opt/rocm
+
 ENV LD_LIBRARY_PATH=$ROCM_PATH/lib
 # ENV CMAKE_PREFIX_PATH="/app/.venv/lib/python3.12/site-packages/torch/share/cmake/Torch"
 ENV DEVICE_LIB_PATH=$ROCM_PATH/llvm/amdgcn/bitcode  
