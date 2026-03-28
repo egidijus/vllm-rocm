@@ -32,6 +32,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
 ENV PATH="/root/.local/bin:${PATH}"
 RUN cd /app && uv venv --python 3.12 && \
     source .venv/bin/activate && \
+    uv pip install pip && \
     echo "source /app/.venv/bin/activate" > /root/.bash_profile
 
 
