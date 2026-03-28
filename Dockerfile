@@ -5,6 +5,7 @@ ARG ROCM_VERSION=7.13.0a20260327
 #ARG ROCM_VERSION=7.12.0a20260311
 #ARG ROCM_VERSION=7.12.0a20260205
 ARG VLLM_BRANCH="releases/v0.18.1"
+ENV PATH="/root/.local/bin:${PATH}"
 
 FROM ubuntu:24.04 AS base
 ENV PYTHONUNBUFFERED=1
@@ -34,9 +35,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -LsSf --retry 3 --retry-delay 5 https://astral.sh/uv/install.sh -o /tmp/uv-install.sh \
     && env UV_INSTALL_DIR="/root/.local/bin" sh /tmp/uv-install.sh \
     && rm -f /tmp/uv-install.sh \
-    && uv --version && \
-    export PATH=/root/.local/bin:$PATH
-ENV PATH="/root/.local/bin:${PATH}"
+    && uv --version
+# ENV PATH="/root/.local/bin:${PATH}"
 RUN cd /app && uv venv --python 3.12 && \
     source .venv/bin/activate && \
     uv pip install pip && \
