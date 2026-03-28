@@ -97,6 +97,9 @@ RUN --security=insecure git clone https://github.com/vllm-project/vllm.git && \
     python3 setup.py bdist_wheel --dist-dir=dist && \
     uv pip install /opt/rocm/share/amd_smi
 
+# DOC check if amd-smi works, can we detect gpu
+RUN $ROCM_PATH/bin/amd-smi list
+
 # Verify that PyTorch is the ROCm build, not CUDA
 RUN python3 -c "import torch; assert torch.version.hip is not None, \
     f'Expected ROCm PyTorch but got CUDA (torch.version.cuda={torch.version.cuda}, torch.version.hip={torch.version.hip})'; \
