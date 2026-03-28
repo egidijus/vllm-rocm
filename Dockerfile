@@ -2,6 +2,7 @@
 ARG AMDGPU_FAMILY=gfx120X-all
 ARG GPU_ARCH=gfx1201
 ARG ROCM_VERSION=7.12.0a20260205
+ARG VLLM_BRANCH=releases/v0.18.1
 
 FROM ubuntu:24.04 AS base
 ENV PYTHONUNBUFFERED=1
@@ -71,7 +72,7 @@ RUN cp /root/.bash_profile /root/.bashrc
 
 # clone vllm
 RUN --security=insecure git clone https://github.com/vllm-project/vllm.git && \
-    cd vllm && git checkout -b v0.16.0rc0 && \
+    cd vllm && git checkout -b ${VLLM_BRANCH} && \
     python use_existing_torch.py && \
     uv pip install --upgrade numba \
         scipy \
@@ -83,10 +84,11 @@ RUN --security=insecure git clone https://github.com/vllm-project/vllm.git && \
     python setup.py develop && \
     uv pip install /opt/rocm/share/amd_smi
 
-RUN git clone https://github.com/hyoon1/flash-attention.git && \    
+# RUN git clone https://github.com/hyoon1/flash-attention.git && \    
 # RUN git clone https://github.com/ROCm/flash-attention.git && \
+RUN git clone https://github.com/Dao-AILab/flash-attention.git && \
     cd flash-attention && \
-    git checkout enable-ck-gfx12 && \
+    # git checkout enable-ck-gfx12 && \
     FLASH_ATTENTION_TRITON_AMD_ENABLE="TRUE" python setup.py install
 
 ENTRYPOINT [ "/app/.venv/bin/vllm","serve"]
