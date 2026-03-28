@@ -45,7 +45,7 @@ RUN cd /app && uv venv --python 3.12 && \
     uv pip install pip && \
     echo "source /app/.venv/bin/activate" > /root/.bash_profile
 
-
+RUN modprobe amdgpu
 
 # install ROCm python packages
 RUN uv pip install \
